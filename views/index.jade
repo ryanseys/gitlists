@@ -3,7 +3,13 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  form(action="/login", method="post")
-    input(type="text", id="user", name="user")
-    input(type="password", id="password", name="password")
-    input(type="submit", value="Login")
+  if locals.user
+    include includes/userstatus
+  else
+    p Login
+    form(action="/login", method="post")
+      input(type="text", id="user", name="user", placeholder="username")
+      br
+      input(type="password", id="password", name="password", placeholder="password")
+      br
+      input(type="submit", value="Login")

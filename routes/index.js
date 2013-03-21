@@ -4,5 +4,5 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'GitLists' });
+  res.render('index', { title: 'GitLists' , user: req.session.user });
 };

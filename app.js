@@ -42,7 +42,7 @@ function checkAuth(req, res, next) {
 }
 
 app.get('/secret', checkAuth, function (req, res) {
-  res.send('Welcome to the secret page ' + req.session.user + "!");
+  res.render('secret', {user : req.session.user })
 });
 
 var users = {
@@ -62,9 +62,9 @@ app.post('/login', function (req, res) {
 });
 
 //the logout route
-app.get('/logout', function (req, res) {
+app.post('/logout', function (req, res) {
   delete req.session.user;
-  res.redirect('/login');
+  res.redirect('/');
 });
 
 http.createServer(app).listen(app.get('port'), function(){
