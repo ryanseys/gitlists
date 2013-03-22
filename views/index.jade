@@ -7,6 +7,8 @@ block content
     p token: #{token}
     form(method="post", action="/create_repo")
       input(type="submit", value="Create Repo")
+    form(method="post", action="/create_test_issue")
+      input(type="submit", value="Create Test Issue")
     form(method="post", action="/logout")
       input(type="submit", value="Logout")
   else

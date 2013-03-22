@@ -27,6 +27,20 @@ exports.auth = function(req, res) {
   res.redirect("https://github.com/login/oauth/authorize?client_id=" + client_id + "&scope=repo");
 };
 
+exports.create_test_issue = function(req, res) {
+  github.issues.create({
+    user: req.session.username,
+    repo: "gh-lists",
+    title: "get milk",
+    body: "don't forget the milk!",
+    assignee: req.session.username,
+    labels: []
+  }, function(err, success) {
+    if(err) throw err;
+    else res.redirect('/');
+  });
+};
+
 exports.create_repo = function(req, res) {
   github.repos.create({
     name : 'gh-lists',
@@ -35,6 +49,10 @@ exports.create_repo = function(req, res) {
     has_issues: true,
     has_wiki: false,
     has_downloads: false
+  }, function(err, result) {
+    if(err) {
+      console.log('Could not create repo.');
+    }
   });
 
   res.redirect('/');
@@ -69,7 +87,13 @@ exports.auth_callback = function(req, res) {
         token: token
       });
 
-      res.redirect('/'); /* only redirect once token has been saved */
+      //get the username and store in session data
+      github.user.get({}, function(err, user) {
+        if(err) throw err;
+        req.session.username = user.login; // ryanseys
+        console.log(user.login);
+        res.redirect('/'); /* only redirect once token has been saved */
+      });
     });
   });
 
