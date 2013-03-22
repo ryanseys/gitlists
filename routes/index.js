@@ -16,7 +16,7 @@ var client_id = process.env.GITLISTS_CLIENT_ID,
 
 exports.index = function(req, res) {
   if(req.session.token) {
-    exports.get_all_issues(req, function(err, issues) {
+    get_all_issues(req, function(err, issues) {
       if(err) throw err;
       res.render('index', { title: 'GitLists', token: req.session.token, issues : issues, username: req.session.username });
     });
@@ -51,7 +51,7 @@ exports.create_test_issue = function(req, res) {
   });
 };
 
-exports.get_all_issues = function(req, callback) {
+function get_all_issues(req, callback) {
   var issues = [];
   github.issues.repoIssues({
     user: req.session.username,
