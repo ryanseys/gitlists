@@ -12,5 +12,10 @@ block content
       input(type="submit", value="Create Test Issue")
     form(method="post", action="/logout")
       input(type="submit", value="Logout")
+  if locals.issues
+    p
+      b List
+    for issue in issues
+      li= issue
   else
     a(href="/auth/github") sign in with github

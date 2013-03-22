@@ -15,7 +15,15 @@ var client_id = process.env.GITLISTS_CLIENT_ID,
     });
 
 exports.index = function(req, res) {
-  res.render('index', { title: 'GitLists', token: req.session.token });
+  if(req.session.token) {
+    exports.get_all_issues(req, function(err, issues) {
+      if(err) throw err;
+      res.render('index', { title: 'GitLists', token: req.session.token, issues : issues });
+    });
+  }
+  else {
+    res.render('index', { title: 'GitLists' });
+  }
 };
 
 exports.logout = function (req, res) {
@@ -37,7 +45,24 @@ exports.create_test_issue = function(req, res) {
     labels: []
   }, function(err, success) {
     if(err) throw err;
-    else res.redirect('/');
+    else {
+      res.redirect('/');
+    }
+  });
+};
+
+exports.get_all_issues = function(req, callback) {
+  var issues = [];
+  github.issues.repoIssues({
+    user: req.session.username,
+    repo: "gh-lists"
+  }, function(err, data) {
+    if(err) callback(err, null);
+    var len = data.length;
+    for(var i = 0; i < len; i++) {
+      issues.push(data[i]["title"]);
+    }
+    callback(null, issues);
   });
 };
 
