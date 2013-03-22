@@ -79,7 +79,6 @@ exports.create_repo = function(req, res) {
       console.log('Could not create repo.');
     }
   });
-
   res.redirect('/');
 };
 
@@ -116,7 +115,7 @@ exports.auth_callback = function(req, res) {
       github.user.get({}, function(err, user) {
         if(err) throw err;
         req.session.username = user.login; // ryanseys
-        console.log(user.login);
+
         res.redirect('/'); /* only redirect once token has been saved */
       });
     });
