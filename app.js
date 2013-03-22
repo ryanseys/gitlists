@@ -48,28 +48,7 @@ function checkAuth(req, res, next) {
   } else {
     next();
   }
-}
-
-app.get('/secret', checkAuth, function (req, res) {
-  // res.render('secret', {user : req.session.user });
-  authGithub();
-});
-
-var users = {
-  "ryan" : "password",
-  "shuhao" : "wu"
-}
-
-//the login route
-app.post('/login', function (req, res) {
-  var post = req.body;
-  if(users[post.user] && users[post.user] == post.password) {
-    req.session.user = post.user;
-    res.redirect('/secret');
-  } else {
-    res.send('Bad user/pass');
-  }
-});
+};
 
 app.get('/auth/github', function(req, res) {
   res.redirect("https://github.com/login/oauth/authorize?client_id=" + client_id + "&scope=repo");
@@ -80,38 +59,37 @@ app.get('/auth/github/callback', function(req, res) {
   var options = {
     hostname: 'github.com',
     port: 443,
-    headers: { "Accept" : "application/json" },
+    headers: { "Accept" : "application/json" }, /* we want github to return json */
     path: '/login/oauth/access_token?client_id=' + client_id +
           '&client_secret=' + client_secret + '&code=' + req.query.code,
     method: 'POST'
   };
 
-  var req = https.request(options, function(res) {
+  var request = https.request(options, function(response) {
     var data = "";
-    res.on('data', function (chunk) {
+
+    response.on('data', function (chunk) {
       data += chunk;
     });
 
-    //the whole res has been recieved, so we just print it out here
-    res.on('end', function () {
-      console.log(data);
+    //the whole response has been recieved, so we just print it out here
+    response.on('end', function () {
+      var token = JSON.parse(data)["access_token"];
+      req.session.token = token;
+      res.redirect('/'); /* only redirect once token has been saved */
     });
   });
 
-
-
-  req.end();
-
-  req.on('error', function(e) {
+  request.on('error', function(e) {
     console.error(e);
   });
 
-  res.redirect('/');
+  request.end();
 });
 
 //the logout route
 app.post('/logout', function (req, res) {
-  delete req.session.user;
+  delete req.session.token;
   res.redirect('/');
 });
 
