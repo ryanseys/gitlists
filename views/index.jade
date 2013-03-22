@@ -4,9 +4,7 @@ block content
   h1= title
   p Welcome to #{title}
   if locals.token
-    p token: #{token}
-    form(method="post", action="/create_repo")
-      input(type="submit", value="Create Repo")
+    p username: #{username}
     form(method="post", action="/create_test_issue")
       input(type="text", name="title", placeholder="Add to list..")
       input(type="submit", value="Create Test Issue")

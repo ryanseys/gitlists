@@ -18,7 +18,7 @@ exports.index = function(req, res) {
   if(req.session.token) {
     exports.get_all_issues(req, function(err, issues) {
       if(err) throw err;
-      res.render('index', { title: 'GitLists', token: req.session.token, issues : issues });
+      res.render('index', { title: 'GitLists', token: req.session.token, issues : issues, username: req.session.username });
     });
   }
   else {
@@ -66,21 +66,29 @@ exports.get_all_issues = function(req, callback) {
   });
 };
 
-exports.create_repo = function(req, res) {
-  github.repos.create({
-    name : 'gh-lists',
-    description : "Created by gitlists for github-hosted lists!",
-    private : true,
-    has_issues: true,
-    has_wiki: false,
-    has_downloads: false
+function create_repo(username, callback) {
+  github.repos.get({
+    user: username,
+    repo: "gh-lists"
   }, function(err, result) {
     if(err) {
-      console.log('Could not create repo.');
+      github.repos.create({
+        name : 'gh-lists',
+        description : "Created by gitlists for github-hosted lists!",
+        private : true,
+        has_issues: true,
+        has_wiki: false,
+        has_downloads: false
+      }, function(err, result) {
+        if(err) callback(err, null);
+        else callback(null, result);
+      });
+    }
+    else {
+      callback(null, result);
     }
   });
-  res.redirect('/');
-};
+}
 
 exports.auth_callback = function(req, res) {
 
@@ -115,10 +123,13 @@ exports.auth_callback = function(req, res) {
       github.user.get({}, function(err, user) {
         if(err) throw err;
         req.session.username = user.login; // ryanseys
-
-        res.redirect('/'); /* only redirect once token has been saved */
+        create_repo(user.login, function(err, result) {
+          if(err) res.send('FAIL');
+          else res.redirect('/')
+        });
       });
     });
+
   });
 
   request.on('error', function(e) {
