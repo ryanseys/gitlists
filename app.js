@@ -33,6 +33,7 @@ app.get('/', routes.index); // get homepage
 app.get('/auth/github', routes.auth); // initial request to auth with github
 app.get('/auth/github/callback', routes.auth_callback); //callback from github auth
 app.post('/logout', routes.logout); // logout
+app.post('/create_repo', routes.create_repo); //creates the initial repo needed
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

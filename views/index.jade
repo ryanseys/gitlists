@@ -5,6 +5,8 @@ block content
   p Welcome to #{title}
   if locals.token
     p token: #{token}
+    form(method="post", action="/create_repo")
+      input(type="submit", value="Create Repo")
     form(method="post", action="/logout")
       input(type="submit", value="Logout")
   else
