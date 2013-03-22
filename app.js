@@ -7,7 +7,16 @@ var express = require('express'),
     routes = require('./routes'),
     user = require('./routes/user'),
     http = require('http'),
+    https = require('https'),
     path = require('path');
+
+/*
+On a Mac put the following in /etc/launchd.conf and reboot:
+setenv GITLISTS_CLIENT_ID xxxxx
+setenv GITLISTS_CLIENT_SECRET xxxxx
+*/
+var client_id = process.env.GITLISTS_CLIENT_ID,
+    client_secret = process.env.GITLISTS_CLIENT_SECRET;
 
 var app = express();
 
@@ -42,7 +51,8 @@ function checkAuth(req, res, next) {
 }
 
 app.get('/secret', checkAuth, function (req, res) {
-  res.render('secret', {user : req.session.user })
+  // res.render('secret', {user : req.session.user });
+  authGithub();
 });
 
 var users = {
@@ -59,6 +69,44 @@ app.post('/login', function (req, res) {
   } else {
     res.send('Bad user/pass');
   }
+});
+
+app.get('/auth/github', function(req, res) {
+  res.redirect("https://github.com/login/oauth/authorize?client_id=" + client_id + "&scope=repo");
+});
+
+app.get('/auth/github/callback', function(req, res) {
+
+  var options = {
+    hostname: 'github.com',
+    port: 443,
+    headers: { "Accept" : "application/json" },
+    path: '/login/oauth/access_token?client_id=' + client_id +
+          '&client_secret=' + client_secret + '&code=' + req.query.code,
+    method: 'POST'
+  };
+
+  var req = https.request(options, function(res) {
+    var data = "";
+    res.on('data', function (chunk) {
+      data += chunk;
+    });
+
+    //the whole res has been recieved, so we just print it out here
+    res.on('end', function () {
+      console.log(data);
+    });
+  });
+
+
+
+  req.end();
+
+  req.on('error', function(e) {
+    console.error(e);
+  });
+
+  res.redirect('/');
 });
 
 //the logout route
