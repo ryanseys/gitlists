@@ -31,8 +31,8 @@ exports.create_test_issue = function(req, res) {
   github.issues.create({
     user: req.session.username,
     repo: "gh-lists",
-    title: "get milk",
-    body: "don't forget the milk!",
+    title: req.body.title,
+    //body: "don't forget the milk!",
     assignee: req.session.username,
     labels: []
   }, function(err, success) {
