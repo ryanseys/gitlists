@@ -14,7 +14,6 @@ If you wish to run this application yourself you must:
 1. Register a new github application using your github account at `https://github.com/settings/applications` and set URL to `http://localhost:3000` and Callback URL to  `http://localhost:3000/auth/github/callback`
 
 2. Set a few environment variables on your machine that will be running this server. I have a Mac so I will detail how I did this on my own machine, but if you have no success with my instructions then StackOverflow is your friend ;)
-
 On a Mac put the following in `/etc/launchd.conf` and reboot:
 ```
 setenv GITLISTS_CLIENT_ID xxxxx
