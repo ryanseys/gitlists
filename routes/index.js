@@ -8,12 +8,11 @@ var client_id = process.env.GITLISTS_CLIENT_ID,
     https = require('https'),
     GitHubApi = require("github"),
     github = new GitHubApi({
-      // required
-      version: "3.0.0",
-      // optional
-      timeout: 5000
+      version: "3.0.0", //required
+      timeout: 5000 //optional
     });
 
+// home page
 exports.index = function(req, res) {
   if(req.session.token) {
     get_all_issues(req, function(err, issues) {
@@ -26,16 +25,19 @@ exports.index = function(req, res) {
   }
 };
 
+//log out of the current user
 exports.logout = function (req, res) {
   delete req.session.token;
   res.redirect('/');
 };
 
+//authorize the user with github api
 exports.auth = function(req, res) {
   res.redirect("https://github.com/login/oauth/authorize?client_id=" + client_id + "&scope=repo");
 };
 
-exports.create_test_issue = function(req, res) {
+// create an issue on the gh-lists github repo to add to list
+exports.create_issue = function(req, res) {
   github.issues.create({
     user: req.session.username,
     repo: "gh-lists",
@@ -51,6 +53,7 @@ exports.create_test_issue = function(req, res) {
   });
 };
 
+// get all issues from the gh-lists github repo
 function get_all_issues(req, callback) {
   var issues = [];
   github.issues.repoIssues({
@@ -66,6 +69,7 @@ function get_all_issues(req, callback) {
   });
 };
 
+// get the repo, and if no repo exists, create one
 function create_repo(username, callback) {
   github.repos.get({
     user: username,
@@ -90,6 +94,7 @@ function create_repo(username, callback) {
   });
 }
 
+//authorization/sign in callback
 exports.auth_callback = function(req, res) {
 
   var options = {
@@ -129,7 +134,6 @@ exports.auth_callback = function(req, res) {
         });
       });
     });
-
   });
 
   request.on('error', function(e) {

@@ -34,8 +34,7 @@ app.get('/', routes.index); // get homepage
 app.get('/auth/github', routes.auth); // initial request to auth with github
 app.get('/auth/github/callback', routes.auth_callback); //callback from github auth
 app.post('/logout', routes.logout); // logout
-// app.post('/create_repo', routes.create_repo); //creates the initial repo needed
-app.post('/create_test_issue', routes.create_test_issue);
+app.post('/create_issue', routes.create_issue);
 
 server.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'));
@@ -44,6 +43,6 @@ server.listen(app.get('port'), function() {
 io.sockets.on('connection', function (socket) {
   socket.emit('msg', "you are connected!");
   socket.on('msg', function (data) {
-    console.log(data);
+    //console.log(data);
   });
 });
