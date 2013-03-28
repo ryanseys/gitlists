@@ -69,6 +69,35 @@ function get_all_issues(req, callback) {
   });
 };
 
+function close_issue(req, id, callback) {
+  var options = {
+    hostname: 'github.com',
+    port: 443,
+    path: '/repos/'+req.session.username+'/gh-lists/issues/' + id+ "?access_token="+req.session.token+"&state=closed",
+    method: 'PUT'
+  };
+
+  var request = https.request(options, function(response) {
+    var data = "";
+
+    response.on('data', function (chunk) {
+      data += chunk;
+    });
+
+    //the whole response has been recieved, so we just print it out here
+    response.on('end', function () {
+      JSON.parse(data);
+      console.log(data);
+    });
+  });
+
+  request.on('error', function(e) {
+    console.error(e);
+  });
+
+  request.end();
+};
+
 // get the repo, and if no repo exists, create one
 function create_repo(username, callback) {
   github.repos.get({
