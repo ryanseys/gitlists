@@ -33,7 +33,7 @@ app.configure('development', function(){
 app.get('/', routes.index); // get homepage
 app.get('/auth/github', routes.auth); // initial request to auth with github
 app.get('/auth/github/callback', routes.auth_callback); //callback from github auth
-app.post('/logout', routes.logout); // logout
+app.get('/logout', routes.logout); // logout
 app.post('/create_issue', routes.create_issue);
 
 server.listen(app.get('port'), function() {

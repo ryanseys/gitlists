@@ -1,10 +1,21 @@
 extends layout
 
 block content
-  h1= title
+  div(class="navbar")
+    div(class="navbar-inner")
+      a(class="brand", href="#")= title
+      ul(class="nav pull-right")
+        li(class="inactive")
+          if locals.token
+            a(href="/logout", type="submit") Logout #{username}
+          else
+            a(href="/auth/github") Login to GitHub
   div(class="row")
     div(class="span3")
-      h4 Your GitLists
+      if locals.token
+        h4 #{username}'s GitLists
+      else
+        h4 Your GitLists
       ul(class="nav nav-list")
         li(class="active")
           a Default List
@@ -14,37 +25,37 @@ block content
       table(class="table table-hover table-condensed")
         thead
           tr
-            th Done?
+            th &#x2713;
             th Description
             th Tags
         tbody
-          tr
-            td
-              input(type="checkbox", style="margin-bottom:5px;")
-            td make this style better
-            td work css
-          tr
-            td
-              input(type="checkbox", style="margin-bottom:5px;")
-            td fix plumbing
-            td personal projects
-          tr
-            td
-              input(type="checkbox", style="margin-bottom:5px;")
-            td work on more projects
-            td home personal
-
+          if locals.issues
+            for issue in issues
+              tr
+                td
+                  input(type="checkbox", style="margin-bottom:5px;")
+                td= issue
+                td tags...
+          else
+            tr
+              td
+                input(type="checkbox", style="margin-bottom:5px;")
+              td make this style better
+              td work css
+            tr
+              td
+                input(type="checkbox", style="margin-bottom:5px;")
+              td fix plumbing
+              td personal projects
+            tr
+              td
+                input(type="checkbox", style="margin-bottom:5px;")
+              td work on more projects
+              td home personal
   if locals.token
-    p username: #{username}
-      form(method="post", action="/logout")
-        input(type="submit", value="Logout")
-    form(method="post", action="/create_issue")
+    form(class="form-inline", method="post", action="/create_issue")
       input(type="text", name="title", placeholder="Add to list..")
-      input(type="submit", value="Add item")
-  if locals.issues
-    p
-      b Default list
-    for issue in issues
-      li= issue
+      span &nbsp;
+      input(class="btn btn-primary", type="submit", value="Add item")
   else
     a(href="/auth/github") sign in with github
