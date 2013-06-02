@@ -8,3 +8,7 @@ socket.on('msg', function (data) {
 socket.on('close', function(){
   console.log("closed connection");
 });
+
+function create_issue(title) {
+  socket.emit('create_issue', title);
+}

@@ -42,7 +42,6 @@ exports.create_issue = function(req, res) {
     user: req.session.username,
     repo: "gh-lists",
     title: req.body.title,
-    //body: "don't forget the milk!",
     assignee: req.session.username,
     labels: []
   }, function(err, success) {

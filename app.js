@@ -43,6 +43,6 @@ server.listen(app.get('port'), function() {
 io.sockets.on('connection', function (socket) {
   socket.emit('msg', "you are connected!");
   socket.on('msg', function (data) {
-    //console.log(data);
+
   });
 });
