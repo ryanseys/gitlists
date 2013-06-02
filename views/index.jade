@@ -2,6 +2,38 @@ extends layout
 
 block content
   h1= title
+  div(class="row")
+    div(class="span3")
+      h4 Your GitLists
+      ul(class="nav nav-list")
+        li(class="active")
+          a Default List
+            i(class="icon-home icon-white")
+    div(class="span9")
+      h4 Default List
+      table(class="table table-hover table-condensed")
+        thead
+          tr
+            th Done?
+            th Description
+            th Tags
+        tbody
+          tr
+            td
+              input(type="checkbox", style="margin-bottom:5px;")
+            td make this style better
+            td work css
+          tr
+            td
+              input(type="checkbox", style="margin-bottom:5px;")
+            td fix plumbing
+            td personal projects
+          tr
+            td
+              input(type="checkbox", style="margin-bottom:5px;")
+            td work on more projects
+            td home personal
+
   if locals.token
     p username: #{username}
       form(method="post", action="/logout")
