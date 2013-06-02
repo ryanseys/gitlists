@@ -13,11 +13,11 @@ If you wish to run this application yourself you must:
 
 1. Register a new github application using your github account at `https://github.com/settings/applications` and set URL to `http://localhost:3000` and Callback URL to  `http://localhost:3000/auth/github/callback`
 
-2. Set a few environment variables on your machine that will be running this server. I have a Mac so I will detail how I did this on my own machine, but if you have no success with my instructions then StackOverflow is your friend ;)
-On a Mac put the following in `/etc/launchd.conf` and reboot:
+2. Set a few environment variables on your machine that this server will be used. Be sure to not share these (especially the SECRET) with anyone.
+On a Mac put the following in one of your bash/zsh scripts (or run these in your terminal prior to running the server):
 ```
-setenv GITLISTS_CLIENT_ID xxxxx
-setenv GITLISTS_CLIENT_SECRET xxxxx
+export GITLISTS_CLIENT_ID=xxxxx
+export GITLISTS_CLIENT_SECRET=xxxxx
 ```
 where `xxxxx` is replaced with your client_id and client_secret for your github application.
 
@@ -25,3 +25,6 @@ where `xxxxx` is replaced with your client_id and client_secret for your github 
 4. Install node modules by executing `npm install` in the cloned repo folder.
 5. Start server by executing `node app.js` in the cloned repo folder.
 
+## Contributions
+
+If you wish to contribute to this project, please fork and send me a pull request!
