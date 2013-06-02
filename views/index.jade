@@ -1,9 +1,9 @@
 extends layout
 
 block content
-  div(class="navbar")
+  div(class="navbar navbar-fixed-top")
     div(class="navbar-inner")
-      a(class="brand", href="#")= title
+      a(class="brand", href="#", style="margin-left:5px;")= title
       ul(class="nav pull-right")
         li(class="inactive")
           if locals.token
